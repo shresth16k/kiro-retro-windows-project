@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Windows 95 CSS Variables */
+:root {
+  --win95-teal: #008080;
+  --win95-grey: #C0C0C0;
+  --win95-highlight: #FFFFFF;
+  --win95-shadow: #000000;
+  --win95-dark-grey: #808080;
+  --win95-button-face: #C0C0C0;
+}
+
+/* Global Windows 95 Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  overflow: hidden;
+  background-color: var(--win95-teal);
+}
+
+/* Windows 95 Button Style */
+.win95-button {
+  background-color: var(--win95-grey);
+  border: 2px outset var(--win95-grey);
+  color: black;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.win95-button:active {
+  border: 2px inset var(--win95-grey);
+}
+
+/* Windows 95 Panel Style */
+.win95-panel {
+  background-color: var(--win95-grey);
+  border: 2px outset var(--win95-grey);
+}
+
+.win95-panel-inset {
+  background-color: var(--win95-grey);
+  border: 2px inset var(--win95-grey);
+}
