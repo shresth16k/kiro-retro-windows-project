@@ -189,7 +189,7 @@ The player starts in a dark alley in Neo-Tokyo, 2085. Rain reflects neon signs. 
   };
 
   // DOS Commands simulation
-  const executeCommand = (command) => {
+  const executeCommand = async (command) => {
     const cmd = command.toLowerCase().trim();
     const responses = [];
 
