@@ -111,7 +111,7 @@ The player starts in a dark alley in Neo-Tokyo, 2085. Rain reflects neon signs. 
 
       } else if (geminiKey) {
         // Gemini API call
-        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiKey}`, {
+        response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiKey}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
