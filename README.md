@@ -35,9 +35,19 @@ Experience the nostalgia of dial-up internet, floppy disks, and that iconic teal
 - **Secret Password Guardian**: Unlock hidden features by solving 90s technology riddles
 - **Authentic Chat Interface**: AOL Instant Messenger-style chat window with retro styling
 
+### 🎮 **AI-Powered Text Adventure Game**
+- **Cyberpunk Mystery Adventure**: Explore Neo-Tokyo 2085 in an AI-generated text adventure
+- **1985-Style Game Engine**: Classic text adventure mechanics with modern AI storytelling
+- **Interactive Storytelling**: Every action generates unique AI responses and plot developments
+- **Retro DOS Terminal**: Authentic command-line interface with blinking cursor and green text
+- **Dynamic Gameplay**: Solve mysteries, interact with NPCs, and navigate cyberpunk scenarios
+- **Game Master AI**: Same AI system powers both chat and adventure game experiences
+
 ### 🔒 **Interactive Applications**
 - **Messenger.exe**: Real-time AI chat with authentic Windows 95 messaging interface
 - **Secret Folder**: Password-protected file explorer that challenges your retro tech knowledge
+- **ADVENTURE.EXE**: AI-powered cyberpunk text adventure game set in Neo-Tokyo 2085
+- **MS-DOS Prompt**: Functional command-line terminal with classic DOS commands and game launcher
 - **Desktop Icons**: Double-click functionality with proper selection states
 - **Error Dialogs**: Authentic Windows 95 error messages with system beep sounds
 
@@ -171,21 +181,30 @@ The `.kiro/architecture_specs.md` file contains detailed technical documentation
 ## 🎮 How to Play
 
 1. **Explore the Desktop**: Double-click icons to open applications
-2. **Chat with the AI**: Open Messenger.exe and start a conversation
-3. **Solve the Riddle**: The AI will challenge you with 90s technology questions
-4. **Unlock the Secret**: Answer correctly to receive the password "RETRO_REVIVAL"
-5. **Access Hidden Content**: Use the password in the Secret Folder application
-6. **Master Window Management**: Drag windows, minimize to taskbar, and manage multiple apps
+2. **Chat with the AI**: Open Messenger.exe and start a conversation with the grumpy computer
+3. **Play the Adventure Game**: Launch ADVENTURE.EXE for an AI-powered cyberpunk mystery
+4. **Solve the Riddle**: The AI will challenge you with 90s technology questions
+5. **Unlock the Secret**: Answer correctly to receive the password "RETRO_REVIVAL"
+6. **Access Hidden Content**: Use the password in the Secret Folder application
+7. **Explore Neo-Tokyo**: Navigate the text adventure using natural language commands
+8. **Master Window Management**: Drag windows, minimize to taskbar, and manage multiple apps
+
+### 🕹️ **Adventure Game Commands**
+- Type natural language actions like "look around", "go north", "examine door"
+- Use "help" for game-specific commands
+- Type "quit" to exit adventure mode
+- Save/load functionality (simulated for retro authenticity)
 
 ## 🏆 Hackathon Features
 
 This project was specifically designed for the **Retro Revival** hackathon, showcasing:
 
-- **Authentic Retro Experience**: Pixel-perfect Windows 95 recreation
-- **Modern Technology Integration**: AI-powered interactions in a retro interface
-- **Complex Frontend Architecture**: Advanced React patterns and state management
-- **Interactive Storytelling**: Narrative-driven password discovery gameplay
-- **Technical Innovation**: AI-assisted development documentation and methodology
+- **Authentic Retro Experience**: Pixel-perfect Windows 95 recreation with multiple applications
+- **Modern AI Integration**: Dual AI systems powering both chat and text adventure gameplay
+- **Complex Frontend Architecture**: Advanced React patterns and sophisticated state management
+- **Interactive Storytelling**: AI-generated narratives and password discovery gameplay
+- **Innovative Game Design**: Classic text adventure mechanics enhanced with modern AI
+- **Technical Innovation**: Complete AI-assisted development documentation and methodology
 
 ## 🤝 Contributing
 

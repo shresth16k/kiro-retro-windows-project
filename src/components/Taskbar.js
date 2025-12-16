@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useWindowManager } from '../contexts/WindowManagerContext';
 import Messenger from './apps/Messenger';
 import SecretFolder from './apps/SecretFolder';
+import DosTerminal from './apps/DosTerminal';
 
 const Taskbar = () => {
   const { taskbarWindows, focusedWindowId, focusWindow, restoreWindow, openWindow } = useWindowManager();
@@ -51,6 +52,20 @@ const Taskbar = () => {
         position: { x: 250, y: 150 },
         size: { width: 500, height: 400 },
         component: <SecretFolder />
+      },
+      {
+        id: 'adventure',
+        title: 'ADVENTURE.EXE - Cyberpunk Mystery',
+        position: { x: 100, y: 50 },
+        size: { width: 650, height: 500 },
+        component: <DosTerminal autoStartAdventure={true} />
+      },
+      {
+        id: 'dosterminal',
+        title: 'MS-DOS Prompt',
+        position: { x: 150, y: 80 },
+        size: { width: 600, height: 450 },
+        component: <DosTerminal />
       }
     ];
     

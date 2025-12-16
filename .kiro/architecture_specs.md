@@ -159,7 +159,94 @@ the user answers a riddle about 90s technology correctly."
 
 ---
 
-## 4. Performance Optimizations
+## 4. AI Text Adventure Game Engine
+
+### Game Master Architecture
+
+The text adventure system represents a sophisticated implementation of AI-driven interactive storytelling, built as an extension of the existing AI infrastructure.
+
+#### Dual-Mode Terminal System
+The DOS Terminal component was architected to support two distinct operational modes:
+
+```javascript
+const [isGameMode, setIsGameMode] = useState(false);
+const [gameHistory, setGameHistory] = useState([]);
+```
+
+**Mode Switching Logic:**
+- **DOS Mode**: Traditional command-line interface with predefined responses
+- **Adventure Mode**: AI-powered interactive storytelling with dynamic content generation
+- **Seamless Transition**: Users can switch between modes without losing context
+
+#### Game State Management
+```javascript
+const gameContext = gameHistory.map(entry => entry.content).join('\n');
+const fullPrompt = `${GAME_SYSTEM_PROMPT}\n\nGame History:\n${gameContext}\n\nPlayer Action: ${userInput}`;
+```
+
+**Context Preservation Strategy:**
+- **Conversation History**: Maintains complete game narrative for AI context
+- **State Persistence**: Tracks player progress, inventory, and location
+- **Memory Management**: Efficient storage of game events without memory leaks
+
+### AI Game Master Implementation
+
+#### System Prompt Engineering for Gaming
+```
+"You are a text adventure game engine from 1985. The genre is Cyberpunk Mystery. 
+Keep descriptions short (under 2 sentences). You describe the scene, and the user says what they do."
+```
+
+**Game Design Constraints:**
+- **Brevity**: Responses limited to 2 sentences for authentic retro feel
+- **Genre Consistency**: Cyberpunk terminology and atmosphere maintained
+- **Interactive Elements**: NPCs, inventory, puzzles, and multiple endings
+- **Failure States**: ASCII art "GAME OVER" screens for player death
+
+#### Natural Language Processing
+The system accepts and processes natural language commands:
+- **Action Recognition**: "look around", "go north", "examine door"
+- **Context Awareness**: AI understands spatial relationships and object interactions
+- **Dynamic Responses**: Each action generates unique, contextual narrative
+
+### Auto-Start Mechanism
+
+#### Component Props Architecture
+```javascript
+const DosTerminal = ({ autoStartAdventure = false }) => {
+  useEffect(() => {
+    if (autoStartAdventure && !hasAutoStarted && !isGameMode) {
+      setHasAutoStarted(true);
+      setTimeout(async () => {
+        const adventureHistory = await startAdventure();
+        setHistory(adventureHistory);
+      }, 500);
+    }
+  }, [autoStartAdventure, hasAutoStarted, isGameMode]);
+```
+
+**Initialization Strategy:**
+- **Props-Based Control**: Desktop icon triggers auto-start via component props
+- **Delayed Execution**: 500ms delay ensures proper component mounting
+- **State Protection**: Prevents multiple initialization attempts
+- **Seamless Experience**: Game begins immediately without user commands
+
+### Performance Considerations
+
+#### AI Response Optimization
+- **Loading States**: Visual feedback during AI processing with "Loading..." indicators
+- **Error Handling**: Graceful degradation to fallback responses
+- **Response Caching**: Game history prevents redundant API calls for context
+- **Timeout Management**: Prevents hanging requests from blocking gameplay
+
+#### Memory Management
+- **History Pruning**: Automatic cleanup of excessive game history
+- **Component Cleanup**: Proper disposal of event listeners and timers
+- **State Isolation**: Game state separate from DOS terminal state
+
+---
+
+## 5. Performance Optimizations
 
 ### React Optimization Strategies
 
@@ -236,6 +323,11 @@ const focusWindow = useCallback((windowId) => {
 **Solution**: Reducer pattern with immutable state updates
 **AI Contribution**: Architected the state structure and update patterns
 
+### Challenge 5: AI Text Adventure Engine
+**Problem**: Creating dynamic, contextual storytelling with consistent game state
+**Solution**: Dual-mode terminal with AI-powered game master and context preservation
+**AI Contribution**: Designed the game engine architecture, prompt engineering, and natural language processing system
+
 ---
 
 ## Conclusion
@@ -256,5 +348,11 @@ This project demonstrates the transformative potential of AI-assisted developmen
 - **Innovation Speed**: Rapid iteration on creative ideas without technical bottlenecks
 
 This project serves as a proof-of-concept for the future of software development, where human creativity and AI implementation capabilities combine to create sophisticated applications at unprecedented speed. The Windows 95 simulator showcases not just nostalgic computing, but the cutting-edge potential of human-AI collaborative development.
+
+### Latest Enhancements:
+- **AI Text Adventure Game**: Complete cyberpunk mystery game with dynamic AI storytelling
+- **Dual-Purpose AI System**: Single AI infrastructure powering both chat and gaming experiences
+- **Advanced Component Architecture**: Props-based auto-start and seamless mode switching
+- **Enhanced User Experience**: Multiple application types with consistent window management
 
 **Repository**: https://github.com/shresth16k/kiro-retro-windows-project
