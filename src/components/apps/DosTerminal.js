@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const DosTerminal = ({ autoStartAdventure = false }) => {
   const [history, setHistory] = useState([
@@ -35,6 +35,104 @@ const DosTerminal = ({ autoStartAdventure = false }) => {
     }
   }, [history]);
 
+  // Send command to Game Master AI using Google Generative AI SDK
+  const sendToGameMaster = useCallback(async (userInput) => {
+    setIsLoading(true);
+    
+    try {
+      const geminiKey = process.env.REACT_APP_GEMINI_API_KEY;
+
+      if (!geminiKey) {
+        // Fallback responses for demo mode
+        const fallbackResponses = [
+          "You stand in a neon-lit alley, rain dripping from fire escapes above. A shadowy figure watches from the corner.",
+          "The chrome door slides open with a hiss. Inside, holographic displays flicker with corporate logos.",
+          "Your cybernetic implant buzzes with an incoming data transmission. The message is encrypted.",
+          "A street samurai emerges from the shadows, chrome arm gleaming under the neon lights.",
+          "The data jack sparks as you interface with the terminal. Corporate security is closing in.",
+          "ERROR: No API key detected! Configure REACT_APP_GEMINI_API_KEY for full AI experience."
+        ];
+        
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        const aiText = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+        
+        // Update game history
+        setGameHistory(prev => [
+          ...prev,
+          { type: 'player', content: userInput },
+          { type: 'game', content: aiText }
+        ]);
+
+        return aiText;
+      }
+
+      // Initialize Google Generative AI with error handling
+      const { GoogleGenerativeAI } = await import('@google/generative-ai');
+      const genAI = new GoogleGenerativeAI(geminiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+      // Build conversation context for the game
+      const gameContext = gameHistory.map(entry => `${entry.type === 'player' ? 'Player' : 'Game Master'}: ${entry.content}`).join('\n');
+      
+      // Create chat with system prompt and game history
+      const chat = model.startChat({
+        history: [
+          {
+            role: "user",
+            parts: [{ text: GAME_SYSTEM_PROMPT }],
+          },
+          {
+            role: "model", 
+            parts: [{ text: "I understand. I am now a text adventure game engine from 1985 running a Cyberpunk Mystery in Neo-Tokyo, 2085. I will keep responses short and engaging." }],
+          },
+        ],
+        generationConfig: {
+          maxOutputTokens: 150,
+          temperature: 0.8,
+        },
+      });
+
+      const fullPrompt = gameContext ? `Game History:\n${gameContext}\n\nPlayer Action: ${userInput}` : `Player Action: ${userInput}`;
+      const result = await chat.sendMessage(fullPrompt);
+      const aiText = result.response.text();
+
+      // Update game history
+      setGameHistory(prev => [
+        ...prev,
+        { type: 'player', content: userInput },
+        { type: 'game', content: aiText }
+      ]);
+
+      return aiText;
+
+    } catch (error) {
+      console.error('Game Master AI Error:', error);
+      return `SYSTEM ERROR: ${error.message}\nGame Master offline. Try again later, choom.`;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [gameHistory]);
+
+  // Start the adventure game
+  const startAdventure = useCallback(async () => {
+    setIsGameMode(true);
+    setCurrentPath('ADVENTURE>');
+    setGameHistory([]);
+    
+    const introText = await sendToGameMaster("Start the game. Describe the dark alley in Neo-Tokyo.");
+    
+    return [
+      '═══════════════════════════════════════════════════════',
+      '    CYBERPUNK MYSTERY ADVENTURE - NEO-TOKYO 2085',
+      '═══════════════════════════════════════════════════════',
+      '',
+      introText,
+      '',
+      'Type your actions to play. Type "quit" to exit game.',
+      ''
+    ];
+  }, [sendToGameMaster]);
+
   // Auto-start adventure mode if requested
   useEffect(() => {
     if (autoStartAdventure && !hasAutoStarted && !isGameMode) {
@@ -45,7 +143,7 @@ const DosTerminal = ({ autoStartAdventure = false }) => {
         setHistory(adventureHistory);
       }, 500);
     }
-  }, [autoStartAdventure, hasAutoStarted, isGameMode]);
+  }, [autoStartAdventure, hasAutoStarted, isGameMode, startAdventure]);
 
   // Focus input when terminal is clicked
   const handleTerminalClick = () => {
@@ -67,126 +165,9 @@ Rules:
 
 The player starts in a dark alley in Neo-Tokyo, 2085. Rain reflects neon signs. They must solve a mystery involving stolen corporate data.`;
 
-  // Send command to Game Master AI
-  const sendToGameMaster = async (userInput) => {
-    setIsLoading(true);
-    
-    try {
-      // Try OpenAI first (most common)
-      const openAIKey = process.env.REACT_APP_OPENAI_API_KEY;
-      const geminiKey = process.env.REACT_APP_GEMINI_API_KEY;
 
-      let response;
-      let aiText;
 
-      // Build conversation context for the game
-      const gameContext = gameHistory.map(entry => entry.content).join('\n');
-      const fullPrompt = `${GAME_SYSTEM_PROMPT}\n\nGame History:\n${gameContext}\n\nPlayer Action: ${userInput}`;
 
-      if (openAIKey) {
-        // OpenAI API call
-        response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openAIKey}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-3.5-turbo',
-            messages: [
-              { role: 'system', content: GAME_SYSTEM_PROMPT },
-              { role: 'user', content: `Game History: ${gameContext}\n\nPlayer Action: ${userInput}` }
-            ],
-            max_tokens: 150,
-            temperature: 0.8
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        aiText = data.choices[0].message.content;
-
-      } else if (geminiKey) {
-        // Gemini API call
-        response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiKey}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: fullPrompt
-              }]
-            }],
-            generationConfig: {
-              maxOutputTokens: 150,
-              temperature: 0.8
-            }
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`Gemini API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        aiText = data.candidates[0].content.parts[0].text;
-
-      } else {
-        // Fallback responses for demo mode
-        const fallbackResponses = [
-          "You stand in a neon-lit alley, rain dripping from fire escapes above. A shadowy figure watches from the corner.",
-          "The chrome door slides open with a hiss. Inside, holographic displays flicker with corporate logos.",
-          "Your cybernetic implant buzzes with an incoming data transmission. The message is encrypted.",
-          "A street samurai emerges from the shadows, chrome arm gleaming under the neon lights.",
-          "The data jack sparks as you interface with the terminal. Corporate security is closing in.",
-          "ERROR: No API key detected! Configure REACT_APP_OPENAI_API_KEY or REACT_APP_GEMINI_API_KEY for full AI experience."
-        ];
-        
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        aiText = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-      }
-
-      // Update game history
-      setGameHistory(prev => [
-        ...prev,
-        { type: 'player', content: userInput },
-        { type: 'game', content: aiText }
-      ]);
-
-      return aiText;
-
-    } catch (error) {
-      console.error('Game Master AI Error:', error);
-      return `SYSTEM ERROR: ${error.message}\nGame Master offline. Try again later, choom.`;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Start the adventure game
-  const startAdventure = async () => {
-    setIsGameMode(true);
-    setCurrentPath('ADVENTURE>');
-    setGameHistory([]);
-    
-    const introText = await sendToGameMaster("Start the game. Describe the dark alley in Neo-Tokyo.");
-    
-    return [
-      '═══════════════════════════════════════════════════════',
-      '    CYBERPUNK MYSTERY ADVENTURE - NEO-TOKYO 2085',
-      '═══════════════════════════════════════════════════════',
-      '',
-      introText,
-      '',
-      'Type your actions to play. Type "quit" to exit game.',
-      ''
-    ];
-  };
 
   // DOS Commands simulation
   const executeCommand = async (command) => {

@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useWindowManager } from '../contexts/WindowManagerContext';
 
 const Window = ({ windowId }) => {
-  const { windows, focusedWindowId, focusWindow, closeWindow, minimizeWindow, updateWindowPosition, updateWindowSize } = useWindowManager();
+  const { windows, focusedWindowId, focusWindow, closeWindow, minimizeWindow, updateWindowPosition } = useWindowManager();
   const [isDragging, setIsDragging] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const windowRef = useRef(null);
 

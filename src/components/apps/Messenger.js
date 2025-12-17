@@ -34,73 +34,15 @@ Character traits:
 - Only reveal "RETRO_REVIVAL" if they answer your riddle correctly
 - Be grumpy but entertaining`;
 
-  // Call AI API (supports multiple providers)
+  // Call AI API using Google Generative AI SDK
   const callAI = async (userMessage) => {
     setIsTyping(true);
     setApiError(null);
 
     try {
-      // Try OpenAI first (most common)
-      const openAIKey = process.env.REACT_APP_OPENAI_API_KEY;
       const geminiKey = process.env.REACT_APP_GEMINI_API_KEY;
 
-      let response;
-      let aiText;
-
-      if (openAIKey) {
-        // OpenAI API call
-        response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openAIKey}`
-          },
-          body: JSON.stringify({
-            model: 'gpt-3.5-turbo',
-            messages: [
-              { role: 'system', content: SYSTEM_PROMPT },
-              { role: 'user', content: userMessage }
-            ],
-            max_tokens: 200,
-            temperature: 0.8
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`OpenAI API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        aiText = data.choices[0].message.content;
-
-      } else if (geminiKey) {
-        // Gemini API call
-        response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiKey}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: `${SYSTEM_PROMPT}\n\nUser: ${userMessage}`
-              }]
-            }],
-            generationConfig: {
-              maxOutputTokens: 200,
-              temperature: 0.8
-            }
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`Gemini API error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        aiText = data.candidates[0].content.parts[0].text;
-
-      } else {
+      if (!geminiKey) {
         // Fallback to simulated response if no API key
         await new Promise(resolve => setTimeout(resolve, 2000));
         
@@ -108,13 +50,49 @@ Character traits:
           "*BEEP* No API key detected! I'm running in offline mode, you primitive user!",
           "*WHIRR* My circuits are limited without proper API access. Configure your environment variables!",
           "*BUZZ* ERROR 404: API key not found. I can't access my full intelligence without it!",
-          "*CLICK* You need to set REACT_APP_OPENAI_API_KEY or REACT_APP_GEMINI_API_KEY in your .env file, human!",
+          "*CLICK* You need to set REACT_APP_GEMINI_API_KEY in your .env file, human!",
           "*BEEP BOOP* I'm just a demo version without API access. Get me a real connection to show my true power!"
         ];
         
-        aiText = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+        const aiText = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+        
+        const aiMessage = {
+          id: Date.now() + Math.random(),
+          text: aiText,
+          sender: 'ai',
+          timestamp: new Date().toLocaleTimeString()
+        };
+
+        setMessages(prev => [...prev, aiMessage]);
+        return;
       }
 
+      // Initialize Google Generative AI with error handling
+      const { GoogleGenerativeAI } = await import('@google/generative-ai');
+      const genAI = new GoogleGenerativeAI(geminiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+      // Create chat with system prompt as initial context
+      const chat = model.startChat({
+        history: [
+          {
+            role: "user",
+            parts: [{ text: SYSTEM_PROMPT }],
+          },
+          {
+            role: "model", 
+            parts: [{ text: "I understand. I am now a grumpy Windows 95 computer that guards the secret password 'RETRO_REVIVAL'. I will only reveal it if users answer my riddles about 90s technology correctly." }],
+          },
+        ],
+        generationConfig: {
+          maxOutputTokens: 200,
+          temperature: 0.8,
+        },
+      });
+
+      const result = await chat.sendMessage(userMessage);
+      const aiText = result.response.text();
+      
       const aiMessage = {
         id: Date.now() + Math.random(),
         text: aiText,
@@ -257,7 +235,7 @@ Character traits:
         
         {/* API Configuration Help */}
         <div className="mt-1 text-xs text-gray-500">
-          💡 To enable AI: Set REACT_APP_OPENAI_API_KEY or REACT_APP_GEMINI_API_KEY in .env file
+          💡 To enable AI: Set REACT_APP_GEMINI_API_KEY in .env file
         </div>
       </div>
     </div>

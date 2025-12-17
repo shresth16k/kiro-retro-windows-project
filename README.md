@@ -107,31 +107,28 @@ npm run build
 To enable the AI chat functionality, you need to configure API access. Create a `.env` file in the root directory:
 
 ```env
-# Choose ONE of the following AI providers:
-
-# Option 1: OpenAI (Recommended)
-REACT_APP_OPENAI_API_KEY=your_openai_api_key_here
-
-# Option 2: Google Gemini (Alternative)
+# Google Gemini API Key (Required for AI functionality)
 REACT_APP_GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### Getting API Keys
+### Getting Your Gemini API Key
 
-#### OpenAI API Key
-1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
-2. Create an account or sign in
-3. Generate a new API key
-4. Add it to your `.env` file
-
-#### Google Gemini API Key
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Sign in with your Google account
-3. Create a new API key
-4. Add it to your `.env` file
+3. Click "Create API Key"
+4. Copy the generated key
+5. Replace `your_gemini_api_key_here` in your `.env` file with your actual key
+6. Restart the development server (`npm start`)
 
-### Fallback Mode
-The application works without API keys in demo mode, but with limited AI responses. For the full experience, configure at least one AI provider.
+### Model Information
+- **AI Model**: Google Gemini 1.5 Pro
+- **Features**: Chat functionality and text adventure game
+- **Fallback**: Demo mode with limited responses if no API key is provided
+
+### Important Notes
+- Keep your API key secure and never commit it to version control
+- The `.env` file is already in `.gitignore` to prevent accidental commits
+- Restart your development server after adding the API key
 
 ## 🤖 AI Implementation
 

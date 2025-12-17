@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useWindowManager } from '../contexts/WindowManagerContext';
-import Messenger from './apps/Messenger';
-import SecretFolder from './apps/SecretFolder';
-import DosTerminal from './apps/DosTerminal';
 
 const Taskbar = () => {
   const { taskbarWindows, focusedWindowId, focusWindow, restoreWindow, openWindow } = useWindowManager();
@@ -35,43 +32,19 @@ const Taskbar = () => {
     }
   };
 
-  // Handle Start button click - cycle through apps
-  const handleStartClick = () => {
-    // Cycle between different applications
-    const apps = [
-      {
-        id: 'messenger',
+  // Handle Start button click with dynamic imports
+  const handleStartClick = async () => {
+    try {
+      const { default: Messenger } = await import('./apps/Messenger');
+      openWindow('messenger', {
         title: 'Messenger.exe',
         position: { x: 200, y: 100 },
         size: { width: 450, height: 500 },
         component: <Messenger />
-      },
-      {
-        id: 'secretfolder',
-        title: 'Secret Folder',
-        position: { x: 250, y: 150 },
-        size: { width: 500, height: 400 },
-        component: <SecretFolder />
-      },
-      {
-        id: 'adventure',
-        title: 'ADVENTURE.EXE - Cyberpunk Mystery',
-        position: { x: 100, y: 50 },
-        size: { width: 650, height: 500 },
-        component: <DosTerminal autoStartAdventure={true} />
-      },
-      {
-        id: 'dosterminal',
-        title: 'MS-DOS Prompt',
-        position: { x: 150, y: 80 },
-        size: { width: 600, height: 450 },
-        component: <DosTerminal />
-      }
-    ];
-    
-    // Open a random app for demo purposes
-    const randomApp = apps[Math.floor(Math.random() * apps.length)];
-    openWindow(randomApp.id, randomApp);
+      });
+    } catch (error) {
+      console.error('Failed to load app from Start button:', error);
+    }
   };
 
   return (
