@@ -55,23 +55,23 @@ const SecretFolder = () => {
 
   if (isUnlocked) {
     return (
-      <div className="h-full flex flex-col bg-win95-grey">
+      <div className="h-full flex flex-col bg-win95-grey relative overflow-hidden">
         {/* Success Screen */}
-        <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-b from-blue-100 to-blue-200">
+        <div className="flex-1 flex flex-col items-center justify-start p-4 bg-gradient-to-b from-blue-100 to-blue-200 overflow-auto">
           {/* Trophy/Success Icon */}
-          <div className="text-8xl mb-4 animate-bounce">
+          <div className="text-4xl mb-3 mt-2">
             🏆
           </div>
           
           {/* Success Message */}
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-yellow-600 mb-2 drop-shadow-lg">
+          <div className="text-center max-w-full">
+            <h1 className="text-lg font-bold text-yellow-600 mb-2 drop-shadow-lg">
               🎉 YOU WIN! 🎉
             </h1>
-            <p className="text-lg text-blue-800 mb-4">
+            <p className="text-sm text-blue-800 mb-3">
               Welcome to the Secret Folder!
             </p>
-            <div className="bg-white border-2 border-win95-shadow border-t-win95-shadow border-l-win95-shadow border-r-win95-highlight border-b-win95-highlight p-4 text-xs">
+            <div className="bg-white border-2 border-win95-shadow border-t-win95-shadow border-l-win95-shadow border-r-win95-highlight border-b-win95-highlight p-3 text-xs max-w-sm mx-auto">
               <p className="mb-2">🎮 <strong>Congratulations!</strong></p>
               <p className="mb-2">You've successfully accessed the hidden area of Retro Revival!</p>
               <p className="mb-2">🕹️ This Windows 95 simulator is fully functional with:</p>
@@ -82,7 +82,7 @@ const SecretFolder = () => {
                 <li>Desktop icons and applications</li>
                 <li>Authentic Windows 95 styling</li>
               </ul>
-              <p className="mt-4 text-center font-bold">
+              <p className="mt-3 text-center font-bold">
                 🎯 Secret unlocked! You're a true retro enthusiast! 🎯
               </p>
             </div>
@@ -93,7 +93,7 @@ const SecretFolder = () => {
   }
 
   return (
-    <div className="h-full flex flex-col bg-win95-grey">
+    <div className="h-full flex flex-col bg-win95-grey relative">
       {/* File Explorer Header */}
       <div className="bg-win95-grey border-b-2 border-win95-shadow p-1">
         <div className="flex items-center gap-2 text-xs">
@@ -187,8 +187,8 @@ const SecretFolder = () => {
 
       {/* Error Dialog */}
       {showError && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-win95-grey border-2 border-win95-highlight border-t-win95-highlight border-l-win95-highlight border-r-win95-shadow border-b-win95-shadow p-1 min-w-80">
+        <div className="absolute inset-2 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-win95-grey border-2 border-win95-highlight border-t-win95-highlight border-l-win95-highlight border-r-win95-shadow border-b-win95-shadow p-1 w-72 max-w-full">
             {/* Dialog Title Bar */}
             <div className="bg-blue-600 text-white px-2 py-1 text-xs font-bold flex justify-between items-center mb-2">
               <span>Secret Folder - Error</span>
@@ -202,7 +202,7 @@ const SecretFolder = () => {
             
             {/* Dialog Content */}
             <div className="bg-win95-grey p-4 flex items-center gap-4">
-              <div className="text-3xl">⚠️</div>
+              <div className="text-2xl">⚠️</div>
               <div className="flex-1">
                 <p className="text-xs font-bold mb-2">Access Denied</p>
                 <p className="text-xs">
